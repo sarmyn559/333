@@ -1,5 +1,8 @@
 <template>
-  <div id="app" class="bg-black text-white py-8">
+  <div id="app">
     <router-view/>
   </div>
 </template>
+<style>
+  body {font-family: 'Libre Franklin', sans-serif;}
+</style>
