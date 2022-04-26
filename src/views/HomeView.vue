@@ -32,7 +32,7 @@
     </div>
    
     <div class="flex justify-center space-x-9 ">
-        <button class="border-yellow-500 border-2 rounded-lg border-white py-3 px-6 text-2xl">Buy 1 Rolls</button>
+        <button class="border-yellow-500 border-2 rounded-lg border-white py-3 px-6 text-2xl">Buy 1 Roll</button>
         <button class="border-yellow-500 border-2 rounded-lg border-white py-3 px-6 text-2xl">Buy 2 Rolls</button>
     </div>
    
