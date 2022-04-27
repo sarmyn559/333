@@ -87,8 +87,11 @@ export default {
     async onBuy (amount) {
       try {
         this.working = true
-        await this.$store.dispatch('buyToken', { amount })
+        if (await this.$store.dispatch('buyToken', { amount })) {
+          this.$toast.success("Buy transaction sent")
+        }
       } catch (e) {
+        this.$toast.error(e.message)
         console.log(e)
       } finally {
         this.working = false
