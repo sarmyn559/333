@@ -91,7 +91,7 @@ export default {
           this.$toast.success("Buy transaction sent")
         }
       } catch (e) {
-        this.$toast.error(e.message)
+        this.$toast.error(e?.data[1]?.with?.string || e.message)
         console.log(e)
       } finally {
         this.working = false
