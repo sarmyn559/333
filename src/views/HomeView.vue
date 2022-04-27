@@ -24,8 +24,8 @@
     </div>
    
     <div class="flex justify-center relative">
-        <progress class="w-3/4 md:w-1/3 mb-20 h-8  border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
-        <div class="inset-1 absolute text-center">{{ sold }}/{{ supply }}</div>
+      <progress class="w-3/4 md:w-1/3 mb-20 h-8 border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
+      <div class="inset-1 absolute text-center">{{ sold }}/{{ supply }}</div>
     </div>
    
     <div class="flex justify-center max-w-4xl mx-auto gap-6 px-4 mb-8">
