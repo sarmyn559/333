@@ -5,12 +5,13 @@
         <button v-if="userAddress" @click="onUnsync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">{{ shortAddress }}</button>
         <button v-else @click="onSync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">Connect Wallet</button>
     </nav>
-
     <div class="flex flex-col md:flex-row justify-center items-center max-w-4xl mx-auto gap-6 px-4 mb-16">
       <img src="images/3man1.png" alt="" class="md:w-44 md:h-44 md:mr-10 text-center ">
-      <div class="border-yellow-500 border-2 rounded-lg p-6 md:text-3xl text-2xl ">
-        <p>Initially thr33p3nny is available in rolls of {{ lotSize }}</p>
-        <p>{{ supply }} Rolls. {{ price }} XTZ each</p>
+      <div class="speech-bubble">
+        <div class="speech-bubble-in rounded-lg p-6 md:text-3xl text-2xl">
+          <p>Initially Thr33p3nny is available in rolls of {{ lotSize }}</p>
+          <p>{{ supply }} Rolls. {{ price }} XTZ each</p>
+        </div>
       </div>
     </div>
 
@@ -106,5 +107,74 @@ progress[value]::-moz-progress-bar {
 progress[value]::-webkit-progress-bar {
   background-color: #000;
   border-radius: 4px;
+}
+.speech-bubble {
+	position: relative;
+	background: orange;
+	border-radius: .4em;
+  padding: 2px;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 10%;
+	width: 0;
+	height: 0;
+	border: 21px solid transparent;
+	border-bottom-color: orange;
+	border-top: 0;
+	margin-left: -21px;
+	margin-top: -21px;
+}
+
+.speech-bubble-in {
+	position: relative;
+	background: #000;
+	border-radius: .4em;
+}
+.speech-bubble-in:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 10%;
+	width: 0;
+	height: 0;
+	border: 21px solid transparent;
+	border-bottom-color: #000;
+	border-top: 0;
+	margin-left: -23px;
+	margin-top: -20px;
+  z-index: 2;
+}
+@media (min-width: 768px) {
+.speech-bubble-in:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 21px solid transparent;
+	border-right-color: #000;
+	border-left: 0;
+	margin-top: -21px;
+	margin-left: -21px;
+  z-index: 2;
+}
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 21px solid transparent;
+	border-right-color: orange;
+	border-left: 0;
+	margin-top: -21px;
+	margin-left: -21px;
+}
 }
 </style>
