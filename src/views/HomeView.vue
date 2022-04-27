@@ -2,37 +2,38 @@
 <div style="background-color:black" class="text-white">
     <nav class="flex justify-between items-center flex-row px-4 py-4 mb-20">
         <img src="/images/logo.png" class="w-16 h-16 rounded-xl">
-        <button class="border-yellow-500 border-2 rounded-lg p-4 text-2xl text-yellow-500 transition-all hover:text-white hover:border-white">Connect Wallet</button>
+        <button v-if="userAddress" @click="onUnsync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">{{ shortAddress }}</button>
+        <button v-else @click="onSync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">Connect Wallet</button>
     </nav>
 
     <div class="flex flex-col md:flex-row justify-center items-center max-w-4xl mx-auto gap-6 px-4 mb-16">
       <img src="images/3man1.png" alt="" class="md:w-44 md:h-44 md:mr-10 text-center ">
-      <div class="border-yellow-500 border-2 rounded-lg p-6 md:text-3xl text-2xl text-yellow-500">
-        <p>Initially thr33p3nny is available in rolls of 33.3</p>
-        <p>100 Rolls. 33.3 XTZ each</p>
+      <div class="border-yellow-500 border-2 rounded-lg p-6 md:text-3xl text-2xl ">
+        <p>Initially thr33p3nny is available in rolls of {{ lotSize }}</p>
+        <p>{{ supply }} Rolls. {{ price }} XTZ each</p>
       </div>
     </div>
 
-    <div class="max-w-4xl mx-auto gap-6 px-4 mb-8 md:text-3xl text-xl text-yellow-500">
+    <div class="max-w-4xl mx-auto gap-6 px-4 mb-8 md:text-3xl text-xl ">
         <div class="border-yellow-500 border-2 rounded-lg p-6">
-          <p>thr33p3nny the Thr33som3s utility token 
+          <p>Thr33p3nny the Thr33som3s utility token 
             <br>ticker: 3P</p>
-          <p>Contract Address: tzkt link</p>
+          <p>Contract Address: <a :href="ktLink" class="text-lg break-all md:text-xl" target="_blank" rel="noopener nofollow">{{ token }}</a></p>
         </div>
     </div>
    
     <div class="flex justify-center relative">
-        <progress class="w-3/4 md:w-1/3 mb-20 h-8 text-yellow-500 border-yellow-500 border-2 rounded-lg" value="32" max="100" />
-        <div class="inset-1 absolute text-center">33/100</div>
+        <progress class="w-3/4 md:w-1/3 mb-20 h-8  border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
+        <div class="inset-1 absolute text-center">{{ sold }}/{{ supply }}</div>
     </div>
    
     <div class="flex justify-center max-w-4xl mx-auto gap-6 px-4 mb-8">
-        <button class="border-yellow-500 border-2 rounded-lg py-3 px-6 text-xl md:text-2xl text-yellow-500 transition-all hover:text-white hover:border-white">Buy 1 Roll</button>
-        <button class="border-yellow-500 border-2 rounded-lg py-3 px-6 text-xl md:text-2xl text-yellow-500 transition-all hover:text-white hover:border-white">Buy 2 Rolls</button>
+        <button @click="onBuy(1)" class="border-yellow-500 border-2 rounded-lg py-3 px-6 text-xl md:text-2xl transition-all hover:text-yellow-500 hover:border-white">Buy 1 Roll</button>
+        <button @click="onBuy(2)" class="border-yellow-500 border-2 rounded-lg py-3 px-6 text-xl md:text-2xl transition-all hover:text-yellow-500 hover:border-white">Buy 2 Rolls</button>
     </div>
    
     <div class="flex justify-center mt-20">
-        <img src="" alt="spinning coin">
+        <img src="/images/spin.gif" alt="spinning coin" class="w-32 h-32">
     </div>
    
     <div class="flex justify-center mt-16 space-x-9 ">
@@ -44,16 +45,55 @@
       </a>
     </div>
 
-    <div class="flex flex-wrap flex-col md:flex-row justify-center px-4 py-8 text-center mt-6 text-green-500">
+    <div class="flex flex-wrap flex-col md:flex-row justify-center px-4 py-8 text-center mt-6">
        <span>©️ 2022 Made by Boris Grit at TezHouse</span><span>&nbsp;In collaboration with Sebuh Squad</span><span>&nbsp;for the Grotto</span>
     </div>
 </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import config from '../config'
 
 export default {
-  name: 'HomeView'
+  name: 'HomeView',
+  data () {
+    return { working: false }
+  },
+  computed: {
+    ...mapState(['userAddress', 'lotSize', 'lotPrice', 'supply', 'sold', 'token']),
+    ktLink () {
+      return `https://better-call.dev/${config.network}/${this.token}`
+    },
+    price () {
+      return this.lotPrice / 1000000
+    },
+    shortAddress () {
+      const address = this.userAddress
+      return address ? `${address.substring(0, 5)}...${address.substring(31, 40)}` : ''
+    }
+  },
+  async created () {
+    await this.$store.dispatch('init')
+  },
+  methods: {
+    async onSync () {
+      await this.$store.dispatch('connectWallet')
+    },
+    async onUnsync () {
+      await this.$store.dispatch('disconnectWallet')
+    },
+    async onBuy (amount) {
+      try {
+        this.working = true
+        await this.$store.dispatch('buyToken', { amount })
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.working = false
+      }
+    }
+  }
 }
 </script>
 <style>
