@@ -1,6 +1,6 @@
 <template>
 <div style="background-color:black" class="text-white">
-    <nav class="flex justify-between items-center flex-row px-4 py-4 mb-20">
+    <nav class="flex justify-between items-center flex-row px-4 py-4 mb-8">
         <img src="/images/logo.png" class="w-16 h-16 rounded-xl">
         <button v-if="userAddress" @click="onUnsync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">{{ shortAddress }}</button>
         <button v-else @click="onSync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">Connect Wallet</button>
@@ -15,16 +15,16 @@
       </div>
     </div>
 
-    <div class="max-w-4xl mx-auto gap-6 px-4 mb-8 md:text-3xl text-xl ">
+    <div class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl ">
         <div class="border-yellow-500 border-2 rounded-lg p-6">
           <p>Thr33p3nny the Thr33som3s utility token 
             <br>ticker: 3P</p>
-          <p>Contract Address: <a :href="ktLink" class="text-lg break-all md:text-xl" target="_blank" rel="noopener nofollow">{{ token }}</a></p>
+          <p>Contract Address: <a :href="ktLink" class="text-lg break-all md:text-xl hover:text-yellow-400 transition-colors" target="_blank" rel="noopener nofollow">{{ token }}</a></p>
         </div>
     </div>
    
     <div class="flex justify-center relative">
-      <progress class="w-3/4 md:w-1/3 mb-20 h-8 border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
+      <progress class="w-3/4 md:w-1/3 mb-16 h-8 border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
       <div class="inset-1 absolute text-center">{{ sold }}/{{ supply }}</div>
     </div>
    
