@@ -1,5 +1,5 @@
 const IS_MAINNET = false
-const NAME = 'Thr33p3nnies'
+const NAME = 'thr33p3nny'
 
 // 'https://mainnet.visualtez.com',
 // 'https://sebuh.net:8732'

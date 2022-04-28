@@ -9,7 +9,7 @@
       <img src="images/3man1.png" alt="" class="md:w-44 md:h-44 md:mr-10 text-center ">
       <div class="speech-bubble">
         <div class="speech-bubble-in rounded-lg p-6 md:text-3xl text-2xl">
-          <p>Initially Thr33p3nny is available in rolls of {{ lotSize }}</p>
+          <p>Initially thr33p3nny is available in rolls of {{ lotSize }}</p>
           <p>{{ supply }} Rolls. {{ price }} XTZ each</p>
         </div>
       </div>
@@ -17,7 +17,7 @@
 
     <div class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl ">
         <div class="border-yellow-500 border-2 rounded-lg p-6">
-          <p>Thr33p3nny the Thr33som3s utility token 
+          <p>thr33p3nny the thr33som3s utility token 
             <br>ticker: 3P</p>
           <p>Contract Address: <a :href="ktLink" class="text-lg break-all md:text-xl hover:text-yellow-400 transition-colors" target="_blank" rel="noopener nofollow">{{ token }}</a></p>
         </div>
