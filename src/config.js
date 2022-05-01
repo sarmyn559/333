@@ -8,7 +8,7 @@ export default {
   crowdsale: 'KT1TPEPh982nTZAgNqGG4BCuddv4Bwj6GAdp',
   pollInterval: 15000,
   get rpc () {
-    return IS_MAINNET ? 'https://sebuh.net:8732' : 'https://rpc.ithacanet.teztnets.xyz'
+    return IS_MAINNET ? 'https://sebuh.net:8732' : 'https://ithacanet.ecadinfra.com/'
   },
   get tzkt () {
     return IS_MAINNET ? 'https://api.tzkt.io/v1/' : 'https://api.ithacanet.tzkt.io/v1/'
