@@ -9,13 +9,13 @@
       <img src="images/3man1.png" alt="" class="md:w-44 md:h-44 md:mr-10 text-center ">
       <div class="speech-bubble">
         <div class="speech-bubble-in rounded-lg p-6 md:text-3xl text-2xl">
-          <p>Initially thr33p3nny is available in rolls of {{ lotSize }}</p>
-          <p>{{ supply }} Rolls. {{ price }} XTZ each</p>
+          <p class="md:tracking-tighter md:leading-relaxed">Initially thr33p3nny is available in rolls of {{ lotSize }}<br>
+          {{ supply }} Rolls. {{ price }} XTZ each</p>
         </div>
       </div>
     </div>
 
-    <div class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl ">
+    <div class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl">
         <div class="border-yellow-500 border-2 rounded-lg p-6">
           <p>thr33p3nny the thr33som3s utility token 
             <br>ticker: 3P</p>
@@ -25,7 +25,7 @@
    
     <div class="flex justify-center relative">
       <progress class="w-3/4 md:w-1/3 mb-16 h-8 border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
-      <div class="inset-1 absolute text-center">{{ sold }}/{{ supply }}</div>
+      <div class="inset-1 absolute text-center">{{ sold }}  of {{ supply }} sold</div>
     </div>
    
     <div class="flex justify-center max-w-4xl mx-auto gap-6 px-4 mb-8">
