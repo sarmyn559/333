@@ -38,10 +38,10 @@
     </div>
    
     <div class="flex justify-center mt-16 space-x-9 ">
-        <a href="https://discord.com/invite/grotto">
+        <a href="https://discord.com/invite/grotto" target="_blank" rel="nofollow noopener">
         <img src="images/discord.png" alt="" style="width: 95px;height:70px;">
       </a>
-        <a href="https://twitter.com/thr33som3s">
+        <a href="https://twitter.com/thr33som3s" target="_blank" rel="nofollow noopener">
         <img src="images/twitter.png" alt="" style="width: 70px;height:70px;">
       </a>
     </div>
