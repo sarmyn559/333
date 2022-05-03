@@ -5,7 +5,7 @@ const NAME = 'thr33p3nny'
 // 'https://sebuh.net:8732'
 
 export default {
-  crowdsale: 'KT1TPEPh982nTZAgNqGG4BCuddv4Bwj6GAdp',
+  crowdsale: 'KT1HQ4DmHLDAZtUkJoNX4MGBsnWhqtUCogL8',
   pollInterval: 15000,
   get rpc () {
     return IS_MAINNET ? 'https://sebuh.net:8732' : 'https://rpc.ithacanet.teztnets.xyz'
