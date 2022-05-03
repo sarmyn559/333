@@ -27,8 +27,13 @@
       <progress class="w-3/4 md:w-1/3 mb-16 h-8 border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
       <div class="inset-1 absolute text-center">{{ sold }}  of {{ supply }} sold</div>
     </div>
-   
-    <div class="flex justify-center max-w-4xl mx-auto gap-6 px-4 mb-8">
+    <div v-if="sold >= supply" class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl">
+      <div class="border-yellow-500 border-2 rounded-lg p-6">
+          <p>  follow the Grotto for updates on new thr33p3nny drops</p>
+        </div>
+      
+    </div>
+    <div v-else class="flex justify-center max-w-4xl mx-auto gap-6 px-4 mb-8">
         <button @click="onBuy(1)" class="border-yellow-500 border-2 rounded-lg py-3 px-6 text-xl md:text-2xl transition-all hover:text-yellow-500 hover:border-white">Buy 1 Roll</button>
         <button @click="onBuy(2)" class="border-yellow-500 border-2 rounded-lg py-3 px-6 text-xl md:text-2xl transition-all hover:text-yellow-500 hover:border-white">Buy 2 Rolls</button>
     </div>
