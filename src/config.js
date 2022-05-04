@@ -1,11 +1,11 @@
-const IS_MAINNET = false
+const IS_MAINNET = true
 const NAME = 'thr33p3nny'
 
 // 'https://mainnet.visualtez.com',
 // 'https://sebuh.net:8732'
 
 export default {
-  crowdsale: 'KT1HQ4DmHLDAZtUkJoNX4MGBsnWhqtUCogL8',
+  crowdsale: 'KT1Nrer4iUMRQm1Aan5TnkTz9EzFzwuLbvww',
   pollInterval: 15000,
   get rpc () {
     return IS_MAINNET ? 'https://sebuh.net:8732' : 'https://rpc.ithacanet.teztnets.xyz'
