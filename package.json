@@ -9,14 +9,15 @@
   },
   "dependencies": {
     "@tailwindcss/postcss7-compat": "^2.2.17",
-    "@taquito/beacon-wallet": "^12.1",
-    "@taquito/taquito": "^12.1",
+    "@taquito/beacon-wallet": "^14",
+    "@taquito/taquito": "^14",
     "core-js": "^3.8.3",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "vue": "^2.6.11",
     "vue-router": "^3.5.1",
     "vue-toastification": "^1.7.14",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "web3.storage": "^4.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -39,9 +40,6 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "parserOptions": {
-      "parser": "@babel-eslint"
-    },
     "rules": {}
   },
   "browserslist": [

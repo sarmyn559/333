@@ -13,7 +13,8 @@ export default new Vuex.Store({
     lotSize: 0,
     lotPrice: 0,
     sold: 0,
-    paused: false
+    paused: false,
+    APIToken: localStorage.getItem('APIToken')
   },
   getters: {
   },
@@ -28,6 +29,11 @@ export default new Vuex.Store({
     },
     userAddress (state, payload) {
       state.userAddress = payload
+    },
+    apiToken: (state, payload) => {
+      state.APIToken = payload;
+      if (payload) localStorage.setItem('APIToken', payload)
+      else localStorage.removeItem('APIToken')
     }
   },
   actions

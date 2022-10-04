@@ -1,18 +1,20 @@
 import config from '../config'
-import { TezosToolkit, MichelCodecPacker, OpKind } from '@taquito/taquito'
+import { Web3Storage } from 'web3.storage/dist/bundle.esm.min.js'
+import { TezosToolkit, MichelCodecPacker } from '@taquito/taquito'
 import { BeaconWallet } from '@taquito/beacon-wallet'
+import { char2Bytes } from '@taquito/utils'
 
 const tezos = new TezosToolkit(config.rpc)
 tezos.setPackerProvider(new MichelCodecPacker())
 const wallet = new BeaconWallet(config.walletOptions)
 tezos.setWalletProvider(wallet)
 
-const subscribeOperation = tezos.stream.subscribeOperation({
-  and: [
-    { destination: config.crowdsale }, // must be our action contract
-    { kind: OpKind.TRANSACTION }
-  ]
-})
+// const subscribeOperation = tezos.stream.subscribeOperation({
+//   and: [
+//     { destination: config.crowdsale }, // must be our action contract
+//     { kind: OpKind.TRANSACTION }
+//   ]
+// })
 
 const pool = {}
 
@@ -38,9 +40,6 @@ export default {
       setTimeout(poll, config.pollInterval)
     }
     poll()
-    subscribeOperation.on('data', data => {
-      console.log('buy:', data.parameters?.entrypoint === 'buy')
-    })
   },
 
   // onTransactionStream (_, cb) {
@@ -96,5 +95,63 @@ export default {
       if (e.title === 'Aborted') return false
       else throw e
     }
-  }
+  },
+
+  async uploadArtifactWithMetadata ({ state }, { artifact, display, thumbnail, meta }) {
+    const client = new Web3Storage({ token: state.APIToken });
+    let artifactUri
+    let displayUri
+    let thumbnailUri
+    
+    let cid = await client.put([new File([artifact], 'artifact', { type: artifact.type })], { wrapWithDirectory: false })
+    console.log(cid)
+    // let info = await ipfs.add(artifact)
+    artifactUri = `ipfs://${cid}`
+    displayUri = artifactUri
+    if (display) {
+      cid = await client.put([new File([display], 'display', { type: display.type })], { wrapWithDirectory: false })
+      displayUri = `ipfs://${cid}`
+    }
+    thumbnailUri = displayUri
+    if (thumbnail) {
+      cid = await client.put([new File([thumbnail], 'thumb', { type: thumbnail.type })], { wrapWithDirectory: false })
+      thumbnailUri = `ipfs://${cid}`
+    }
+    const now = new Date()
+    const metadata = {
+      date: now.toISOString(),
+      artifactUri,
+      displayUri,
+      thumbnailUri,
+      formats: [
+        { uri: artifactUri, mimeType: artifact.type, fileSize: artifact.size },
+        { uri: displayUri, mimeType: display.type, fileSize: display.size },
+        { uri: thumbnailUri, mimeType: thumbnail.type, fileSize: thumbnail.size },
+      ],
+      decimals: 0,
+      shouldPreferSymbol: false,
+      ...meta
+    }
+    cid = await client.put([new File([JSON.stringify(metadata)], 'json', { type: 'application/json' })], { wrapWithDirectory: false })
+    return cid
+  },
+
+  async uploadArtwork ({ dispatch }, { artifact, display, thumbnail, name, description, royalties, tags }) {
+    const meta = {
+      name,
+      description,
+      symbol: 'THR33',
+      tags: (tags || []).map(tag => tag.trim()),
+      // rights: '',
+      creators: [config.owner],
+      royalties: {
+        decimals: 4,
+        shares: {
+          [config.owner]: Math.round(royalties * 10)
+        }
+      }
+    }
+    const result = await dispatch('uploadArtifactWithMetadata', { artifact, display, thumbnail, meta })
+    return char2Bytes(`ipfs://${result}`)
+  },
 }
