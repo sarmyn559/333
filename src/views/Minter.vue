@@ -53,11 +53,18 @@
             {{ work }}
         </div>
     </div>
+    <div v-if="work" class="flex inset-0 fixed bg-black bg-opacity-40 items-center justify-center">
+        <div class="bg-gray-800 text-yellow-400 rounded-lg p-10 max-w-80">
+            {{ work }}
+        </div>
+    </div>
   </div>
 </template>
 
 <script>
 import resizeImgBlob from '../store/resizeimg'
+import { mapState } from 'vuex'
+import config from '../config'
 const IMG_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMsLMxVBAAEHAFyFiJkIgAAAABJRU5ErkJggg==';
 
 export default {
@@ -74,12 +81,12 @@ export default {
       minting: false,
       tags: '',
       src: IMG_PLACEHOLDER,
-      work: '',
       errors: {},
       tokenValid: false,
     }
   },
   computed: {
+    ...mapState(['userAddress', 'work']),
     APIToken: {
       set (value) {
         this.$store.commit('apiToken', value)
@@ -88,6 +95,9 @@ export default {
         return this.$store.state.APIToken
       }
     }
+  },
+  created () {
+    if (this.userAddress !== config.owner) this.$router.replace('/')
   },
   methods: {
     validate () {
@@ -114,33 +124,31 @@ export default {
       try  {
         this.validate()
         const [file] = event.target.files
-        const readStatus = 'Reading Image Artifact:'
-        this.work = readStatus + ' 0%'
+        // const readStatus = 'Reading Image Artifact:'
+        // this.work = readStatus + ' 0%'
 
         const buffer = await new Promise((resolve, reject) => {
           const filereader = new FileReader()
           filereader.onloadend = function (e) {
             resolve(e.target.result)
           }
-          filereader.onprogress = (e) => {
-            this.work= `${readStatus} ${(e.total ? Math.ceil((e.loaded / e.total) * 100) : 100)}%`
-          }
+        //   filereader.onprogress = (e) => {
+        //     // this.work= `${readStatus} ${(e.total ? Math.ceil((e.loaded / e.total) * 100) : 100)}%`
+        //   }
           filereader.onerror = reject
           filereader.readAsArrayBuffer(file)
         })
         console.log('MIME:', file.type)
 
         this.artifact = new Blob([buffer], { type: file.type })
-        this.work='Creating display image'
+        // this.work='Creating display image'
         this.display = await resizeImgBlob(this.artifact, 1024)
-        this.work='Creating thumbnail'
+        // this.work='Creating thumbnail'
         this.thumbnail = await resizeImgBlob(this.artifact, 400)
         this.src = URL.createObjectURL(this.thumbnail)
-        console.log(this.thumbnail)
+        // console.log(this.thumbnail)
       } catch (e) {
         this.$toast.error(e.message)
-      } finally {
-        this.work = ''
       }
     },
     async onMint() {
@@ -150,7 +158,7 @@ export default {
         }
         this.minting = true
         const tags = this.tags.split(',').map(tag => tag.trim()).filter(tag => !!tag)
-        const bytes = await this.$store.dispatch('uploadArtwork', {
+        const ipfsUri = await this.$store.dispatch('uploadArtwork', {
           artifact: this.artifact,
           display: this.display,
           thumbnail: this.thumbnail,
@@ -159,13 +167,15 @@ export default {
           description: this.description,
           royalties: this.royalties,
         })
-        console.log(bytes)
+        console.log(ipfsUri)
+        await this.$store.dispatch('mintToken', { ipfsUri, editions: this.editions })
         this.onReset()
       } catch (e) {
         if (e.message.includes('API token')) {
           this.$store.commit('apiToken', null)
           this.$toast.error('Invalid Web3.storage API token supplied.')
         }
+        this.$toast.error(e.message)
         console.log(e)
       } finally {
         this.minting = false

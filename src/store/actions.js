@@ -1,6 +1,6 @@
 import config from '../config'
 import { Web3Storage } from 'web3.storage/dist/bundle.esm.min.js'
-import { TezosToolkit, MichelCodecPacker } from '@taquito/taquito'
+import { TezosToolkit, MichelCodecPacker, MichelsonMap } from '@taquito/taquito'
 import { BeaconWallet } from '@taquito/beacon-wallet'
 import { char2Bytes } from '@taquito/utils'
 
@@ -97,26 +97,29 @@ export default {
     }
   },
 
-  async uploadArtifactWithMetadata ({ state }, { artifact, display, thumbnail, meta }) {
+  async uploadArtifactWithMetadata ({ state, commit }, { artifact, display, thumbnail, meta }) {
     const client = new Web3Storage({ token: state.APIToken });
     let artifactUri
     let displayUri
     let thumbnailUri
-    
+    commit('work', 'Uploading artifact')
     let cid = await client.put([new File([artifact], 'artifact', { type: artifact.type })], { wrapWithDirectory: false })
     console.log(cid)
     // let info = await ipfs.add(artifact)
     artifactUri = `ipfs://${cid}`
     displayUri = artifactUri
     if (display) {
+      commit('work', 'Uploading preview')
       cid = await client.put([new File([display], 'display', { type: display.type })], { wrapWithDirectory: false })
       displayUri = `ipfs://${cid}`
     }
     thumbnailUri = displayUri
     if (thumbnail) {
+      commit('work', 'Uploading thumbnail')
       cid = await client.put([new File([thumbnail], 'thumb', { type: thumbnail.type })], { wrapWithDirectory: false })
       thumbnailUri = `ipfs://${cid}`
     }
+    commit('work', 'Uploading metadata')
     const now = new Date()
     const metadata = {
       date: now.toISOString(),
@@ -145,13 +148,33 @@ export default {
       // rights: '',
       creators: [config.owner],
       royalties: {
-        decimals: 4,
+        decimals: 3,
         shares: {
           [config.owner]: Math.round(royalties * 10)
         }
       }
     }
     const result = await dispatch('uploadArtifactWithMetadata', { artifact, display, thumbnail, meta })
-    return char2Bytes(`ipfs://${result}`)
+    return `ipfs://${result}`
   },
+
+  async mintToken ({ state, dispatch, commit }, { ipfsUri, editions }) {
+    try {
+        commit('work', 'Wallet connect')
+        await dispatch('connectWallet')
+        commit('work', 'Waiting for blockchain confirmation')
+        const contract = await getContract(config.mintery)
+        const op = await contract.methods.mint(editions, state.userAddress, MichelsonMap.fromLiteral({ "": char2Bytes(ipfsUri) })).send();
+        const result = await op.confirmation(1)
+        if (result.completed) {
+          return true
+        }
+        throw new Error('Mint transaction failed')
+      } catch (e) {
+        if (e.title === 'Aborted') return false
+        else throw e
+      } finally {
+        commit('work', '')
+      }
+  }
 }

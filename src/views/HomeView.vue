@@ -2,6 +2,7 @@
 <div style="background-color:black" class="text-white">
     <nav class="flex justify-between items-center flex-row px-4 py-4 mb-8">
         <img src="/images/logo.png" class="w-16 h-16 rounded-xl">
+        <router-link v-if="isOwner" to="/mint" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">Mint</router-link>
         <button v-if="userAddress" @click="onUnsync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">{{ shortAddress }}</button>
         <button v-else @click="onSync" class="border-yellow-500 border-2 rounded-lg p-4 text-2xl  transition-all hover:text-yellow-500 hover:border-white">Connect Wallet</button>
     </nav>
@@ -76,6 +77,9 @@ export default {
     shortAddress () {
       const address = this.userAddress
       return address ? `${address.substring(0, 5)}...${address.substring(31, 40)}` : ''
+    },
+    isOwner () {
+      return this.userAddress === config.owner
     }
   },
   async created () {

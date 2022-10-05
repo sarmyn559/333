@@ -14,7 +14,8 @@ export default new Vuex.Store({
     lotPrice: 0,
     sold: 0,
     paused: false,
-    APIToken: localStorage.getItem('APIToken')
+    APIToken: localStorage.getItem('APIToken'),
+    work: ''
   },
   getters: {
   },
@@ -34,7 +35,8 @@ export default new Vuex.Store({
       state.APIToken = payload;
       if (payload) localStorage.setItem('APIToken', payload)
       else localStorage.removeItem('APIToken')
-    }
+    },
+    work: (state, payload) => { state.work = payload }
   },
   actions
 })
