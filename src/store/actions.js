@@ -143,7 +143,7 @@ export default {
     const meta = {
       name,
       description,
-      symbol: 'THR33',
+      symbol: 'MINT',
       tags: (tags || []).map(tag => tag.trim()),
       // rights: '',
       creators: [config.owner],
