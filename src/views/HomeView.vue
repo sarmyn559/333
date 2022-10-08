@@ -28,9 +28,10 @@
       <progress class="w-3/4 md:w-1/3 mb-16 h-8 border-yellow-500 border-2 rounded-lg" :value="sold" :max="supply" />
       <div class="inset-1 absolute text-center">{{ sold }}  of {{ supply }} sold</div>
     </div>
-    <div v-if="sold >= supply" class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl">
-      <div class="border-yellow-500 border-2 rounded-lg p-6">
-        <p>  follow the Grotto for updates on new thr33p3nny drops</p>
+    <div v-if="sold >= supply || paused" class="max-w-4xl mx-auto gap-6 px-4 mb-16 md:text-3xl text-xl">
+      <div class="border-yellow-500 border-2 rounded-lg p-6 text-center">
+        <p v-if="paused" class="mb-2">the sale is currently paused</p>
+        <p> follow the Grotto for updates on new thr33p3nny drops</p>
       </div>
     </div>
     <div v-else class="flex justify-center max-w-4xl mx-auto gap-6 px-4 mb-8">
@@ -67,7 +68,7 @@ export default {
     return { working: false }
   },
   computed: {
-    ...mapState(['userAddress', 'lotSize', 'lotPrice', 'supply', 'sold', 'token', 'minters']),
+    ...mapState(['userAddress', 'lotSize', 'lotPrice', 'supply', 'sold', 'token', 'minters', 'paused']),
     ktLink () {
       return `https://better-call.dev/${config.network}/${this.token}`
     },
