@@ -86,7 +86,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userAddress', 'work']),
+    ...mapState(['userAddress', 'work', 'minters']),
     APIToken: {
       set (value) {
         this.$store.commit('apiToken', value)
@@ -97,7 +97,7 @@ export default {
     }
   },
   created () {
-    if (this.userAddress !== config.owner) this.$router.replace('/')
+    if (!this.minters.includes(this.userAddress)) this.$router.replace('/')
   },
   methods: {
     validate () {
