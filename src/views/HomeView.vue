@@ -79,7 +79,8 @@ export default {
       return address ? `${address.substring(0, 5)}...${address.substring(31, 40)}` : ''
     },
     isOwner () {
-      return this.minters.includes[this.userAddress]
+      console.log('minters', this.minters)
+      return this.minters.includes(this.userAddress)
     }
   },
   async created () {
