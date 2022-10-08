@@ -67,7 +67,7 @@ export default {
     return { working: false }
   },
   computed: {
-    ...mapState(['userAddress', 'lotSize', 'lotPrice', 'supply', 'sold', 'token']),
+    ...mapState(['userAddress', 'lotSize', 'lotPrice', 'supply', 'sold', 'token', 'minters']),
     ktLink () {
       return `https://better-call.dev/${config.network}/${this.token}`
     },
@@ -79,7 +79,7 @@ export default {
       return address ? `${address.substring(0, 5)}...${address.substring(31, 40)}` : ''
     },
     isOwner () {
-      return this.userAddress === config.owner
+      return this.minters.includes[this.userAddress]
     }
   },
   async created () {

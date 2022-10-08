@@ -32,6 +32,9 @@ export default {
       const address = await wallet.getPKH()
       commit('userAddress', address)
     }
+    const mintery = await getContract(config.mintery)
+    const { mint_authority } = await mintery.storage()
+    commit('minters', mint_authority)
     const contract = await getContract(config.crowdsale)
     const poll = async () => {
       const storage = await contract.storage()
