@@ -142,18 +142,18 @@ export default {
     return cid
   },
 
-  async uploadArtwork ({ dispatch }, { artifact, display, thumbnail, name, description, royalties, tags }) {
+  async uploadArtwork ({ state, dispatch }, { artifact, display, thumbnail, name, description, royalties, tags }) {
     const meta = {
       name,
       description,
       symbol: 'MINT',
       tags: (tags || []).map(tag => tag.trim()),
       // rights: '',
-      creators: [config.owner],
+      creators: [state.userAddress],
       royalties: {
         decimals: 3,
         shares: {
-          [config.owner]: Math.round(royalties * 10)
+          [state.userAddress]: Math.round(royalties * 10)
         }
       }
     }
