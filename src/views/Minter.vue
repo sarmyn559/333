@@ -64,7 +64,7 @@
 <script>
 import resizeImgBlob from '../store/resizeimg'
 import { mapState } from 'vuex'
-import config from '../config'
+
 const IMG_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMsLMxVBAAEHAFyFiJkIgAAAABJRU5ErkJggg==';
 
 export default {

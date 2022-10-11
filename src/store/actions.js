@@ -125,6 +125,7 @@ export default {
     commit('work', 'Uploading metadata')
     const now = new Date()
     const metadata = {
+      ...meta,
       date: now.toISOString(),
       artifactUri,
       displayUri,
@@ -135,8 +136,7 @@ export default {
         { uri: thumbnailUri, mimeType: thumbnail.type, fileSize: thumbnail.size },
       ],
       decimals: 0,
-      shouldPreferSymbol: false,
-      ...meta
+      shouldPreferSymbol: false
     }
     cid = await client.put([new File([JSON.stringify(metadata)], 'json', { type: 'application/json' })], { wrapWithDirectory: false })
     return cid
@@ -148,7 +148,7 @@ export default {
       description,
       symbol: 'MINT',
       tags: (tags || []).map(tag => tag.trim()),
-      // rights: '',
+      rights: 'None - All Rights Reserved',
       creators: [state.userAddress],
       royalties: {
         decimals: 3,
