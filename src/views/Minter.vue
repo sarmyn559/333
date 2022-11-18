@@ -38,11 +38,11 @@
         </div>
         <div class="mb-6">
             <label class="block mb-2 text-sm font-medium text-yellow-400" for="royalties">Royalties: {{royalties}}%</label>
-            <input v-model="royalties" id="royalties" type="range" min="0" max="50" step="0.1" value="10" class="w-full h-2 bg-gray-200 rounded appearance-none cursor-pointer">
+            <input v-model="royalties" id="royalties" type="number" min="0" max="50" step="0.1" value="25" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             <div v-if=" errors.royalties" class="my-1 text-xs text-red-500">{{ errors.royalties }}</div>
         </div>
         <div class="mb-6">
-            <button @click="onMint" type="button" class="focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded text-sm px-5 py-2.5 mr-2 mb-2">Mint</button>
+            <button @click="onBeforeMint" type="button" class="focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded text-sm px-5 py-2.5 mr-2 mb-2">Mint</button>
         </div>
     </form>
     <div class="flex-1 pt-32">
@@ -56,6 +56,24 @@
     <div v-if="work" class="flex inset-0 fixed bg-black bg-opacity-40 items-center justify-center">
         <div class="bg-gray-800 text-yellow-400 rounded-lg p-10 max-w-80">
             {{ work }}
+        </div>
+    </div>
+    <div v-if="metaPreview" class="flex inset-0 fixed bg-black bg-opacity-40 items-center justify-center">
+        <div class="bg-gray-50 text-black rounded-lg p-4 max-w-lg">
+            <h3 class="text-xl mb-2">You are about to mint new token:</h3>
+            <p class="text-sm mb-3 p-2 text-yellow-900 bg-yellow-100 rounded-sm">Check if everything is correct before continuing.</p>
+            <p class="text-lg text-gray-500 mb-2">Name: <span class="text-black">{{ name }}</span></p>
+            
+            <p class="text-lg text-gray-500 mb-2">Description: <span class="text-black">{{ description }}</span></p>
+            
+            <p class="text-gray-500 mb-2">Tags: <span class="text-black">{{ tags }}</span></p>
+            
+            <h4 class="text-gray-500 mb-2">Number of editions: <span class="text-black">{{ editions }}</span></h4>
+            <h4 class="text-gray-500 mb-2">Royalties: <span class="text-black">{{ royalties }}</span>%</h4>
+            <div class="flex justify-between gap-4 mt-8">
+                <button @click="metaPreview = false" type="button" class="border focus:outline-none focus:ring-4 font-medium rounded text-sm px-5 py-2.5 mb-2 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-600 focus:ring-gray-700">Cancel</button>
+                <button @click="onMint" type="button" class="focus:outline-none text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded text-sm px-5 py-2.5 mb-2">Continue</button>
+            </div>
         </div>
     </div>
   </div>
@@ -73,7 +91,7 @@ export default {
     return {
       name: '',
       description: '',
-      royalties: 10,
+      royalties: 25,
       editions: 1,
       artifact: null,
       display: null,
@@ -83,6 +101,7 @@ export default {
       src: IMG_PLACEHOLDER,
       errors: {},
       tokenValid: false,
+      metaPreview: false,
     }
   },
   computed: {
@@ -97,7 +116,7 @@ export default {
     }
   },
   created () {
-    if (!this.minters.includes(this.userAddress)) this.$router.replace('/')
+    if (this.minters.includes(this.userAddress)) this.$router.replace('/')
   },
   methods: {
     validate () {
@@ -151,11 +170,15 @@ export default {
         this.$toast.error(e.message)
       }
     },
-    async onMint() {
-      try {
+    onBeforeMint () {
         if (!this.validate()) {
           return
         }
+        this.metaPreview = true
+    },
+    async onMint() {
+      try {
+        this.metaPreview = false
         this.minting = true
         const tags = this.tags.split(',').map(tag => tag.trim()).filter(tag => !!tag)
         const ipfsUri = await this.$store.dispatch('uploadArtwork', {

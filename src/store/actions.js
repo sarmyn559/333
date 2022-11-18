@@ -39,7 +39,6 @@ export default {
     const poll = async () => {
       const storage = await contract.storage()
       commit('storage', storage)
-      console.log(storage)
       setTimeout(poll, config.pollInterval)
     }
     poll()
@@ -174,6 +173,7 @@ export default {
         }
         throw new Error('Mint transaction failed')
       } catch (e) {
+        commit('work', '')
         if (e.title === 'Aborted') return false
         else throw e
       } finally {

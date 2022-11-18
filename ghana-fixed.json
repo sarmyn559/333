@@ -1,0 +1,35 @@
+{
+  "name": "Ghana - Low Effort - #WCGHN1",
+  "description": "This mint is a low effort painting of the flag of Ghana.\n\nIt is made up of the Colors Red, Gold and Green with a Black Star.\n\nthr33som3s and the Grotto love spectacle, and there are very few global celebrations more spectacular than soccer's World Cup.   Through a month-long celebration, thr33som3s asks his collectors to consider who they really are, why they collect his work, what they want his work to become, and what they are willing to do to collect it.   Collector choices via blockchain, coupled with the chaotic outcome of real life sport will determine what will happen with each piece.\n\nTo kick off the 3v3nt, thr33som3s minted 32 individually hand-painted tokens to represent the 32 countries pursuing the World Cup. Though minted on a separate madn3ss wallet, these tokens are offical thr33som3s and, as such, will have Future Utility.\n\nThis mint is an individually conceived and hand painted piece.\n\n******* digital capture of original painting, gouache on vintage baseball card, 2022. ******* NFT image is for personal use, no commercial rights are granted. Twitter @thr33som3s and IG @thr33somes to see upcoming paintings and new series. ************",
+  "symbol": "MINT",
+  "tags": ["thr33som3s", "ghana", "world cup", "low effort"],
+  "rights": "None - All Rights Reserved",
+  "creators": ["tz1SwAcmLjfCgGtYj6Uw9U12dMAWT2PLYvF1"],
+  "royalties": {
+    "decimals": 3,
+    "shares": { "tz1SwAcmLjfCgGtYj6Uw9U12dMAWT2PLYvF1": 250 }
+  },
+  "date": "2022-11-17T21:23:10.693Z",
+  "artifactUri": "ipfs://bafybeicxva6wa5dsar6od2rpdm2hr26tjgnraiavz2vve3ucwib3ffaiei",
+  "displayUri": "ipfs://bafkreif4orvhxrk5w4mkv5vkeuf7sjehsjphjl64malmoc5klvznjdsrmq",
+  "thumbnailUri": "ipfs://bafkreiextvfwm6hlgw2uqyfoknbyojcjnvrzqimvrwkovydkypzdqvobvu",
+  "formats": [
+    {
+      "uri": "ipfs://bafybeicxva6wa5dsar6od2rpdm2hr26tjgnraiavz2vve3ucwib3ffaiei",
+      "mimeType": "image/png",
+      "fileSize": 4825319
+    },
+    {
+      "uri": "ipfs://bafkreif4orvhxrk5w4mkv5vkeuf7sjehsjphjl64malmoc5klvznjdsrmq",
+      "mimeType": "image/jpeg",
+      "fileSize": 130650
+    },
+    {
+      "uri": "ipfs://bafkreiextvfwm6hlgw2uqyfoknbyojcjnvrzqimvrwkovydkypzdqvobvu",
+      "mimeType": "image/jpeg",
+      "fileSize": 28499
+    }
+  ],
+  "decimals": 0,
+  "shouldPreferSymbol": false
+}
