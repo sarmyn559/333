@@ -6,7 +6,7 @@ export default {
   mintery: 'KT1A4hNqioKzxfgtTMJSkGZFharDPkQtUjLw',
   pollInterval: 15000,
   get rpc () {
-    return IS_MAINNET ? 'https://sebuh.net:8732' : 'https://rpc.kathmandunet.teztnets.xyz'
+    return IS_MAINNET ? 'https://rpc.tzbeta.net' : 'https://rpc.kathmandunet.teztnets.xyz'
   },
   get tzkt () {
     return IS_MAINNET ? 'https://api.tzkt.io/v1/' : 'https://api.kathmandunet.tzkt.io/v1/'
