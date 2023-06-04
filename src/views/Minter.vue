@@ -18,9 +18,15 @@
             <div v-if=" errors.name" class="my-1 text-xs text-red-500">{{ errors.name }}</div>
         </div>
         <div class="mb-6">
-            <label class="block mb-2 text-sm font-medium text-yellow-400" for="file_input">Image file</label>
-            <input @change="onImageSelect" accept=".png,.jpg,.jpeg,.gif" class="block w-full text-sm text-gray-900 bg-gray-50 rounded border border-gray-300 cursor-pointer" aria-describedby="file_input_help" id="file_input" type="file">
-            <div v-if="errors.file" class="my-1 text-xs text-red-500">{{ errors.file }}</div>
+          <label class="block mb-2 text-sm font-medium text-yellow-400" for="file_input">Image (or mp4) file</label>
+          <input @change="onImageSelect" accept=".png,.jpg,.jpeg,.gif,.mp4" class="block w-full text-sm text-gray-900 bg-gray-50 rounded border border-gray-300 cursor-pointer" aria-describedby="file_input_help" id="file_input" type="file">
+          <div v-if="errors.file" class="my-1 text-xs text-red-500">{{ errors.file }}</div>
+          <p v-else class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG, GIF or MP4</p>
+        </div>
+        <div v-if="previewRequired" class="mb-6">
+            <label class="block mb-2 text-sm font-medium text-yellow-400" for="file_input">Smaller Image preview file</label>
+            <input @change="onPreviewImageSelect" accept=".png,.jpg,.jpeg,.gif" class="block w-full text-sm text-gray-900 bg-gray-50 rounded border border-gray-300 cursor-pointer" aria-describedby="file_input_help" id="file_input" type="file">
+            <div v-if="errors.preview" class="my-1 text-xs text-red-500">{{ errors.preview }}</div>
             <p v-else class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG or GIF</p>
         </div>
         <div class="mb-6">
@@ -94,6 +100,7 @@ export default {
       royalties: 25,
       editions: 1,
       artifact: null,
+      preview: null,
       display: null,
       thumbnail: null,
       minting: false,
@@ -102,6 +109,7 @@ export default {
       errors: {},
       tokenValid: false,
       metaPreview: false,
+      previewRequired: false,
     }
   },
   computed: {
@@ -133,8 +141,11 @@ export default {
       if (this.editions < 1) {
         errors.push(['editions', 'At least 1 edition is required'])
       }
-      if (!this.artifact || !this.display || ! this.thumbnail) {
+      if (!this.artifact) {
         errors.push(['file', 'Image Artifact is required'])
+      }
+      if (this.previewRequired && !this.preview) {
+        errors.push(['preview', 'Image preview is required'])
       }
       this.$set(this, 'errors', Object.fromEntries(errors))
       return errors.length === 0
@@ -142,6 +153,7 @@ export default {
     async onImageSelect (event) {
       try  {
         this.validate()
+  
         const [file] = event.target.files
         // const readStatus = 'Reading Image Artifact:'
         // this.work = readStatus + ' 0%'
@@ -160,11 +172,57 @@ export default {
         console.log('MIME:', file.type)
 
         this.artifact = new Blob([buffer], { type: file.type })
-        // this.work='Creating display image'
-        this.display = await resizeImgBlob(this.artifact, 1024)
-        // this.work='Creating thumbnail'
-        this.thumbnail = await resizeImgBlob(this.artifact, 400)
-        this.src = URL.createObjectURL(this.thumbnail)
+
+        this.preview = null
+
+        this.previewRequired = !file.type.startsWith('image/')
+
+        if (file.type.startsWith('image/')) {
+        
+          await this.createPreviewBlobs(this.artifact, 1024)
+        }
+        // console.log(this.thumbnail)
+      } catch (e) {
+        this.$toast.error(e.message)
+      }
+    },
+
+    async createPreviewBlobs (fromBlob, size = 0) {
+
+      this.display = size > 0 ? await resizeImgBlob(fromBlob, size) : fromBlob
+
+      this.thumbnail = size > 400 ? await resizeImgBlob(fromBlob, 400) : fromBlob
+
+      this.src = URL.createObjectURL(this.thumbnail)
+    },
+
+    async onPreviewImageSelect (event) {
+      try  {
+        this.validate()
+        const [file] = event.target.files
+        // const readStatus = 'Reading Image Artifact:'
+        // this.work = readStatus + ' 0%'
+
+        const buffer = await new Promise((resolve, reject) => {
+          const filereader = new FileReader()
+          filereader.onloadend = function (e) {
+            resolve(e.target.result)
+          }
+        //   filereader.onprogress = (e) => {
+        //     // this.work= `${readStatus} ${(e.total ? Math.ceil((e.loaded / e.total) * 100) : 100)}%`
+        //   }
+          filereader.onerror = reject
+          filereader.readAsArrayBuffer(file)
+        })
+
+        if(!file.type.startsWith('image/')) {
+          throw new Error('Preview should be PNG, JPG or GIF image.')
+        }
+
+        this.preview = new Blob([buffer], { type: file.type })
+
+        await this.createPreviewBlobs(this.preview)
+
         // console.log(this.thumbnail)
       } catch (e) {
         this.$toast.error(e.message)
@@ -216,6 +274,7 @@ export default {
       this.artifact = null
       this.thumbnail = null
       this.display = null
+      this.previe = null
     }
   }
 }
