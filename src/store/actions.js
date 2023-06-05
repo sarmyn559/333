@@ -141,7 +141,7 @@ export default {
     return cid
   },
 
-  async uploadArtwork ({ state, dispatch }, { artifact, display, thumbnail, name, description, royalties, tags }) {
+  async uploadArtwork ({ state, dispatch }, { artifact, display, thumbnail, name, description, royalties, tags, attributes }) {
     const meta = {
       name,
       description,
@@ -155,6 +155,9 @@ export default {
           [state.userAddress]: Math.round(royalties * 10)
         }
       }
+    }
+    if (attributes.length > 0) {
+      meta.attributes = attributes
     }
     const result = await dispatch('uploadArtifactWithMetadata', { artifact, display, thumbnail, meta })
     return `ipfs://${result}`

@@ -24,14 +24,29 @@
           <p v-else class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG, GIF or MP4</p>
         </div>
         <div v-if="previewRequired" class="mb-6">
-            <label class="block mb-2 text-sm font-medium text-yellow-400" for="file_input">Smaller Image preview file</label>
-            <input @change="onPreviewImageSelect" accept=".png,.jpg,.jpeg,.gif" class="block w-full text-sm text-gray-900 bg-gray-50 rounded border border-gray-300 cursor-pointer" aria-describedby="file_input_help" id="file_input" type="file">
+            <label class="block mb-2 text-sm font-medium text-yellow-400" for="file_input2">Smaller Image preview file</label>
+            <input @change="onPreviewImageSelect" accept=".png,.jpg,.jpeg,.gif" class="block w-full text-sm text-gray-900 bg-gray-50 rounded border border-gray-300 cursor-pointer" aria-describedby="file_input_help" id="file_input2" type="file">
             <div v-if="errors.preview" class="my-1 text-xs text-red-500">{{ errors.preview }}</div>
             <p v-else class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG or GIF</p>
         </div>
         <div class="mb-6">
             <label class="block mb-2 text-sm font-medium text-yellow-400" for="desc">Description</label>
             <textarea @blur="validate" v-model.trim="description" id="desc" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Description here..."></textarea>
+        </div>
+        <div class="mt-6 mb-8">
+          <h3 class="mb-3 text-sm font-medium text-yellow-400">Optional attributes:</h3>
+          <div class="mb-2 grid grid-cols-2 gap-3">
+            <label class="text-sm font-medium">Trait</label>
+            <label class="text-sm font-medium">Value</label>
+          </div>
+          <div v-for="(t, i) in traits" :key="i" class="mb-4 flex gap-3">
+            <input v-model.trim="t.name" @blur="validate" type="text" class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <input v-model.trim="t.value" @blur="validate" type="text" class="flex-grow grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <button @click.prevent="onRemoveTrait(i)" tabindex="-1" class="p-2 opacity-50 hover:opacity-100 flex-shrink">&times;</button>
+          </div>
+          <div class="mb-6 flex gap-3">
+            <button @click.prevent="onAddTrait" class="px-2 py-1 opacity-50 hover:opacity-100 flex-shrink text-xl">&plus;</button>
+          </div>
         </div>
         <div class="mb-6">
             <label for="name" class="block mb-2 text-sm font-medium text-yellow-400">Tags</label>
@@ -71,6 +86,14 @@
             <p class="text-lg text-gray-500 mb-2">Name: <span class="text-black">{{ name }}</span></p>
             
             <p class="text-lg text-gray-500 mb-2">Description: <span class="text-black">{{ description }}</span></p>
+
+            <div v-if="validAttributes.length" class="text-lg text-gray-500 mb-3">
+              <p class="text-lg text-gray-500 mb-1">Attributes:</p>
+              <ul class="pl-4 text-base text-black">
+                <li v-for="(a, i) in validAttributes" class="mb-1" :key="i + a.name">{{ a.name }}: {{ a.value }}</li>
+              </ul>
+            </div>
+
             
             <p class="text-gray-500 mb-2">Tags: <span class="text-black">{{ tags }}</span></p>
             
@@ -110,6 +133,9 @@ export default {
       tokenValid: false,
       metaPreview: false,
       previewRequired: false,
+      traits: [
+        {name: 'Resolution', value: ''}
+      ]
     }
   },
   computed: {
@@ -121,12 +147,24 @@ export default {
       get () {
         return this.$store.state.APIToken
       }
+    },
+    validAttributes () {
+      return this.traits.filter(({ name, value}) => name && value)
     }
   },
   created () {
-    if (!this.minters.includes(this.userAddress)) this.$router.replace('/')
+    // if (!this.minters.includes(this.userAddress)) this.$router.replace('/')
   },
   methods: {
+    onAddTrait () {
+      this.traits.push({ name: '', value: '' })
+    },
+    onRemoveTrait (index) {
+      this.traits.splice(index, 1)
+      if (this.traits.length === 0) {
+        this.onAddTrait()
+      }
+    },
     validate () {
       const errors = []
       if (!this.APIToken) {
@@ -244,6 +282,7 @@ export default {
           display: this.display,
           thumbnail: this.thumbnail,
           tags,
+          attributes: this.validAttributes,
           name: this.name,
           description: this.description,
           royalties: this.royalties,
