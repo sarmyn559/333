@@ -153,7 +153,7 @@ export default {
     }
   },
   created () {
-    // if (!this.minters.includes(this.userAddress)) this.$router.replace('/')
+    if (!this.minters.includes(this.userAddress)) this.$router.replace('/')
   },
   methods: {
     onAddTrait () {

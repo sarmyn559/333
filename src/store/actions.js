@@ -142,17 +142,21 @@ export default {
   },
 
   async uploadArtwork ({ state, dispatch }, { artifact, display, thumbnail, name, description, royalties, tags, attributes }) {
+    const creator = state.userAddress
+
+    if (!creator) throw new Error("Connect wallet first")
+
     const meta = {
       name,
       description,
       symbol: 'MINT',
       tags: (tags || []).map(tag => tag.trim()),
       rights: 'None - All Rights Reserved',
-      creators: [state.userAddress],
+      creators: [creator],
       royalties: {
         decimals: 3,
         shares: {
-          [state.userAddress]: Math.round(royalties * 10)
+          [creator]: Math.round(royalties * 10)
         }
       }
     }
